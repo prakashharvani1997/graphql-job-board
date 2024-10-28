@@ -43,11 +43,11 @@ export const resolvers ={
         deleteJob:async (_root,{id},{user})=> {
 
 
-            if(!user){
-                throw unAuthorized('Unauthorized user.')
-            }
+            // if(!user){
+            //     throw unAuthorized('Unauthorized user.')
+            // }
 
-            const job = await getJob(id,user.companyId)
+            const job = await getJob(id,null)
 
             if(!job){
                 throw notFoundErr('No job found Err.'+id)
