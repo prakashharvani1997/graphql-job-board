@@ -1,16 +1,17 @@
-import { useEffect, useState } from 'react';
 import JobList from '../components/JobList';
-import { getJobs } from '../lib/graphql/queries.js'
+import { useJobs } from '../lib/graphql/hooks.js';
 
 function HomePage() {
 
-  const [jobs,setJobs]= useState([])
+  const {jobs,loading,error} = useJobs()
 
-  useEffect(()=>{
 
- getJobs().then((data)=>setJobs(data))
-
-  },[])
+  if (loading) {
+    return <div> Loading.....</div>;
+  }
+  if (error) {
+    return <div> Data unavailable</div>;
+  }
 
   return (
     <div>
