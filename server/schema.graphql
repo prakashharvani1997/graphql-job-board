@@ -1,5 +1,5 @@
 type Query {
-    jobs:[Job!]
+    jobs(limit:Int,offset:Int):JobSubList
     job(id:ID!) : Job
     company(id:ID!) : Company
 
@@ -41,4 +41,9 @@ input updateJobInput {
      id:ID!
       title:String!
     description:String
+}
+
+type JobSubList {
+  items: [Job!]!
+  totalCount: Int!
 }

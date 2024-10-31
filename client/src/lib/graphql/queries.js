@@ -80,10 +80,13 @@ query CompanyById($id: ID!) {
 `;
 
 export const JobsQuery = gql`
-query jobs{
-  jobs {
-   ...JobDetail
+query Jobs($limit: Int, $offset: Int) {
+    jobs(limit: $limit, offset: $offset) {
+      items {
+        ...JobDetail
+      }
+      totalCount
+    }
   }
-}
 ${jobDetailFragment}
 `;

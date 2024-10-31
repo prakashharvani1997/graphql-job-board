@@ -1,5 +1,5 @@
 
-import {  getJobs,getJob, getJobsByCompanyId, createJob, deleteJob, updateJob} from "./db/jobs.js";
+import {  getJobs,getJob, getJobsByCompanyId, createJob, deleteJob, updateJob, countJobs} from "./db/jobs.js";
 
 import {  getCompany} from "./db/companies.js";
 import { GraphQLError } from "graphql";
@@ -7,7 +7,12 @@ import { GraphQLError } from "graphql";
 export const resolvers ={
 
     Query : {
-        jobs:  () => getJobs(),
+        jobs: async (_root,{limit,offset}) =>  {
+                    const items = await getJobs(limit, offset);
+                    const totalCount = await countJobs();
+                    return { items, totalCount };
+                  
+            },
         job:async (_root , {id} )=> {
             
             const job = await getJob(id,null)
@@ -75,7 +80,7 @@ export const resolvers ={
         jobs: (company) => getJobsByCompanyId(company.id),
     },
     Job:{
-        company:(job)=>  getCompany(job.companyId),
+        company:(job,_args,{companyLoader})=>  companyLoader.load(job.companyId),
        date : (job)=>  job.createdAt.slice(0,10)
     }
 };
