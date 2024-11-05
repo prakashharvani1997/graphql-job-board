@@ -4,7 +4,9 @@
     "license": "MIT",
     "type": "module",
     "scripts": {
-        "start": "nodemon server.js"
+        "start": "nodemon src/server.ts",
+        "build": "tsc",
+        "codegen": "graphql-codegen --config codegen.json"
     },
     "dependencies": {
         "@apollo/server": "^4.11.0",
@@ -19,6 +21,20 @@
         "nanoid": "^5.0.7"
     },
     "devDependencies": {
-        "nodemon": "^3.1.7"
+        "@graphql-codegen/cli": "5.0.3",
+        "@graphql-codegen/typescript": "4.1.1",
+        "@graphql-codegen/typescript-resolvers": "4.4.0",
+        "@tsconfig/node20": "^20.1.4",
+        "@types/cors": "^2.8.17",
+        "nodemon": "^3.1.7",
+        "ts-node": "^10.9.2",
+        "tsx": "^4.19.2",
+        "typescript": "^5.6.3"
+    },
+    "nodemonConfig": {
+        "ext": "graphql,ts",
+        "execMap": {
+            "ts": "tsx"
+        }
     }
 }

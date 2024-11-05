@@ -1,10 +1,18 @@
 
+import DataLoader from "dataloader";
+import { GraphQLError } from "graphql";
 import {  getJobs,getJob, getJobsByCompanyId, createJob, deleteJob, updateJob, countJobs} from "./db/jobs.js";
 
 import {  getCompany} from "./db/companies.js";
-import { GraphQLError } from "graphql";
+import { Resolvers} from "./generated/schema.js";
+import { CompanyEntity, UserEntity } from "./db/types.js";
 
-export const resolvers ={
+export interface ResolverContext {
+    companyLoader : DataLoader<string,CompanyEntity,string>;
+    user?:UserEntity;
+}
+
+export const resolvers : Resolvers ={
 
     Query : {
         jobs: async (_root,{limit,offset}) =>  {
@@ -24,7 +32,6 @@ export const resolvers ={
             return job
         },
         company:async (_root , {id} )=> {
-
             const company = await getCompany(id)
 
             if(!company){
@@ -60,7 +67,7 @@ export const resolvers ={
             await deleteJob(id)
             return job
         },
-        updateJob:async (_root,{input:{id,title,description}}) => {
+        updateJob:async (_root,{input:{id,title,description}},{user}) => {
 
             if(!user){
                 throw unAuthorized('Unauthorized user.')

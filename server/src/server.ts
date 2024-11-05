@@ -6,7 +6,7 @@ import express from 'express';
 import { readFile } from "node:fs/promises";
 
 import { authMiddleware, handleSignin } from './auth.js';
-import { resolvers } from './resolvers.js';
+import { ResolverContext, resolvers } from './resolvers.js';
 import { getUser } from './db/users.js';
 import { createCompanyLoader } from './db/companies.js';
 
@@ -19,19 +19,19 @@ app.use(cors(), express.json(), authMiddleware)
 app.post('/login', handleSignin)
 
 const typeDefs = await readFile('./schema.graphql', 'utf8')
-async function getContext({ req: { auth } }) {
-  const companyLoader = createCompanyLoader()
-  let context = { companyLoader }
-  if (auth) {
-    context.user = await getUser(auth.sub)
+async function getContext({ req }):Promise<ResolverContext> {
+  const companyLoader = createCompanyLoader();
+  const context: ResolverContext = { companyLoader };
+  if (req.auth) {
+    context.user = await getUser(req.auth.sub);
   }
-  return context
+  return context;
 }
 const server = new ApolloServer({
   typeDefs, resolvers
 })
 await server.start();
-app.use('/graphql', apolloMiddleware(server, { context: getContext }))
+app.use('/graphql', apolloMiddleware(server, { context : getContext }))
 
 app.listen({ port: PORT }, () => {
   console.log('------server running on---', PORT);

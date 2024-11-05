@@ -1,0 +1,13 @@
+{
+    "extends":"@tsconfig/node20/tsconfig.json",
+    "compilerOptions": {
+        "rootDir": "src",
+        "outDir": "build",
+        "module": "Node16",
+        "strict": false
+    },
+    "ts-node": {
+        "esm": true
+    }
+
+}

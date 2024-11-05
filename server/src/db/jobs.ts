@@ -15,14 +15,14 @@ export async function getJobs(limit,offset) {
   return await query
 }
 export async function countJobs() {
-  const { count } = await getJobTable().first().count('* as count');
+  const { count }:any = await getJobTable().first().count('* as count');
   return count;
 }
 
 
 
 export async function getJob(id,companyId) {
-  let obj = {id}
+  let obj:any = {id}
   if(companyId !== null){
     obj.companyId = companyId
   }
